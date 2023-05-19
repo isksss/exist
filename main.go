@@ -6,17 +6,23 @@ import (
 	"os/exec"
 )
 
+func findCommandPath(cmd string) (string, error) {
+	return exec.LookPath(cmd)
+}
+
 func main() {
 	if len(os.Args) < 2 {
+		fmt.Fprintln(os.Stderr, "Usage: which <command>")
 		os.Exit(1)
 	}
-
+	
 	cmd := os.Args[1]
 
-	path, err := exec.LookPath(cmd)
+	path, err := findCommandPath(cmd)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
-	} else {
-		fmt.Printf("%s\n", path)
 	}
+
+	fmt.Printf("%s\n", path)
 }
