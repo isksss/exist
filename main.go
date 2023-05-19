@@ -49,9 +49,7 @@ func FindCommandPath(cmd string) ([]string, error) {
     return filepath.SplitList(path), nil
 }
 
-func main() {
-    opts := ParseOptions()
-
+func handleHelpOption(opts Options) {
     if opts.Help || opts.Cmd == "" {
         fmt.Fprintln(os.Stderr, "Usage: which [flags] <command>")
         fmt.Fprintln(os.Stderr, "Flags:")
@@ -62,12 +60,16 @@ func main() {
         fmt.Fprintln(os.Stderr, "  -p: check if path is executable")
         os.Exit(1)
     }
+}
 
+func handleVersionOption(opts Options) {
     if opts.Version {
         fmt.Println("Version:", Version)
         os.Exit(0)
     }
+}
 
+func handlePathOption(opts Options) {
     if opts.Path {
         info, err := os.Stat(opts.Cmd)
         if os.IsNotExist(err) {
@@ -85,15 +87,9 @@ func main() {
         fmt.Println(opts.Cmd)
         os.Exit(0)
     }
+}
 
-    paths, err := FindCommandPath(opts.Cmd)
-    if err != nil {
-        if !opts.Silent {
-            fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-        }
-        os.Exit(1)
-    }
-
+func handleAllOption(opts Options, paths []string) {
     if opts.All {
         for _, path := range paths {
             fmt.Println(path)
@@ -101,4 +97,22 @@ func main() {
     } else {
         fmt.Println(paths[0])
     }
+}
+
+func main() {
+    opts := ParseOptions()
+
+    handleHelpOption(opts)
+    handleVersionOption(opts)
+    handlePathOption(opts)
+
+    paths, err := FindCommandPath(opts.Cmd)
+    if err != nil {
+        if !opts.Silent {
+            fmt.Fprintf(os.Stderr,"Error: %v\n", err)
+        }
+        os.Exit(1)
+    }
+
+    handleAllOption(opts, paths)
 }
