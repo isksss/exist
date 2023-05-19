@@ -1,3 +1,3 @@
-module github.com/isksss/which
+module github.com/isksss/exist
 
 go 1.20

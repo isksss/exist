@@ -47,7 +47,7 @@ func FindCommandPath(cmd string) ([]string, error) {
 
 func HandleOptions(opts Options) error {
   if opts.Help || opts.Cmd == "" {  
-    return fmt.Errorf("Usage: which [flags] <command>\nFlags:\n --help: display this help message\n -s: silent mode\n -a: display all paths\n --version: display version\n -p: check if path is executable")  
+    return fmt.Errorf("Usage: exist [flags] <command>\nFlags:\n --help: display this help message\n -s: silent mode\n -a: display all paths\n --version: display version\n -p: check if path is executable")  
   }  
 
   if opts.Version {  
